@@ -11,9 +11,50 @@
 </head>
 
 <body>
+  <div class="header">
+    <h1>Tic-Tac-Toe</h1>
+    <p>In this classic game you want to get 3 in a row before your oppponent does. </p>
+    <div class="headerContainer">
+      <div class="playerContainer">
+        <div class="player">
+          <h3>Player One</h3>
+          <label for="playerOne">Name</label>
+          <input class="selection" type="text" name="playerOne" id="playerOne" value="Player One">
+          <label for="playerOneIcon">Icon</label>
+          <select class="selection" name="playerOneIcon" id="playerOneIcon">
+            <option value="X" default>X</option>
+            <option value="O">O</option>
+            <option value="&#128525">&#128525</option>
+            <option value="&#128151">&#128151</option>
+            <option value="&#128512">&#128512</option>
+            <option value="&#128516">&#128516</option>
+          </select>
+        </div>
+        <div class="player">
+          <h3>Player Two</h3>
+          <label for="playerTwo">Name</label>
+          <input class="selection" type="text" name="playerTwo" id="playerTwo" value="Player Two">
+          <label for="playerTwoIcon">Icon</label>
+          <select class="selection" name="playerTwoIcon" id="playerTwoIcon">
+            <option value="O" default>O</option>
+            <option value="X">X</option>
+            <option value="&#128525">&#128525</option>
+            <option value="&#128151">&#128151</option>
+            <option value="&#128512">&#128512</option>
+            <option value="&#128516">&#128516</option>
+          </select>
+        </div>
+      </div>
+      <button class="updatePlayers">Start the game</button>
+    </div>
+  </div>
   <div class="container">
     <div class="board">
     </div>
+  </div>
+  <div class="result">
+    <h2 class="announcement">Player One Wins</h2>
+    <button class="reset">Try again</button>
   </div>
 </body>
 
