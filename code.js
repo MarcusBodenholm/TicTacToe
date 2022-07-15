@@ -1,15 +1,18 @@
 "use strict"
 
-const playerFactory = (name, icon) => {
-  return { name, icon }
-}
 
-let playerOne = playerFactory("Good", "X");
-let playerTwo = playerFactory("Evil", "O");
+const players = (() => {
+  const playerFactory = (name, icon, color) => {
+    return { name, icon, color }
+  }
+  let one = playerFactory("Good", "X", "red");
+  let two = playerFactory("Evil", "O", "blue");
+  return { one, two, playerFactory }
+})()
 
-const board = document.querySelector('.board')
 
 const gameBoard = (() => {
+  const board = document.querySelector('.board')
   let boardArray = ["", "", "", "", "", "", "", "", ""];
   const winStates = [[0, 4, 8], [2, 4, 6], [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8]];
   // Renders the board 
@@ -31,8 +34,8 @@ const gameBoard = (() => {
     let result = false;
     for (const winState of winStates) {
       const test = winState.map(idx => boardArray[idx]);
-      if (test.every(x => x === playerOne.icon) ||
-        test.every(x => x === playerTwo.icon)) {
+      if (test.every(x => x === players.one.icon) ||
+        test.every(x => x === players.two.icon)) {
         result = true;
         break;
       }
@@ -47,16 +50,18 @@ const gameBoard = (() => {
     renderBoard();
   }
   // Updates the corresponding spot on the board and the array with the player's mark. 
-  const updateBoard = (idx, mark) => {
+  const updateBoard = (idx, mark, color) => {
     boardArray[idx] = mark;
-    document.getElementById(idx).innerHTML = mark;
+    const cell = document.getElementById(idx)
+    cell.innerHTML = mark;
+    cell.style.backgroundColor = color;
   }
   // Resets the array, and calls the rerender function.
   const resetBoard = () => {
     boardArray = boardArray.map(x => x = "");
     reRender();
   }
-  return { renderBoard, updateBoard, checkVictory, resetBoard };
+  return { renderBoard, updateBoard, checkVictory, resetBoard, board };
 })()
 gameBoard.renderBoard();
 
@@ -68,11 +73,11 @@ const gameController = (() => {
   let allowPlay = false;
   const togglePlay = () => {
     allowPlay = allowPlay ? false : true;
-    currentPlayer = playerOne;
+    currentPlayer = players.one;
   }
   // Updates the currentPlayer so the logic marks correctly. 
   const updatePlayer = () => {
-    currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
+    currentPlayer = currentPlayer === players.one ? players.two : players.one;
   }
   const makeMove = (idx) => {
     // If allowPlay is false, it ends the function.
@@ -80,7 +85,7 @@ const gameController = (() => {
       return;
     }
     // Else it updates the gameBoard.
-    gameBoard.updateBoard(idx, currentPlayer.icon);
+    gameBoard.updateBoard(idx, currentPlayer.icon, currentPlayer.color);
     moves += 1;
     // If the number of moves is greater than four, it checks for victory. No need to check otherwise since no legal victory is possible. 
     if (moves > 4) {
@@ -100,12 +105,12 @@ const gameController = (() => {
     }
     // If there's a winner then a congratulation message is displayed using the displayController's updateWinner method.
     if (isVictory) {
-      displayController.updateWinner(`Congratulations, ${currentPlayer.name} is victorious!`);
+      displayController.updateWinner(`Congratulations, ${currentPlayer.name} is victorious!`, currentPlayer);
     }
   }
   const resetGame = () => {
     //Resets the relevant properties and calles for a board reset.
-    currentPlayer = playerOne;
+    currentPlayer = players.one;
     moves = 0;
     gameBoard.resetBoard();
   }
@@ -123,15 +128,26 @@ const displayController = (() => {
   const playerBlock = document.querySelector('.headerContainer');
   const selection = document.querySelector('.updatePlayers');
   resetButton.addEventListener('click', () => {
-    resultBlock.style.display = "none";
+    toggleVisibility(resultBlock);
+    // resultBlock.style.display = "none";
     announceWinner.innerHTML = "";
     gameController.resetGame();
     playerBlock.style.display = "flex"
+    toggleVisibility(gameBoard.board);
   })
-  const updateWinner = (text) => {
+  const updateWinner = (text, player) => {
     gameController.togglePlay();
-    resultBlock.style.display = "flex"
+    toggleVisibility(resultBlock)
+    // resultBlock.style.display = "flex"
+    announceWinner.style.color = player.color;
     announceWinner.innerHTML = `${text}`;
+  }
+  const toggleVisibility = (el) => {
+    if (el.classList.contains('hidden')) {
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
   }
   const updatePlayers = () => {
     if (playerOneName.value === playerTwoName.value ||
@@ -139,8 +155,9 @@ const displayController = (() => {
       alert('You can\'t have the same name or icon. Please select a different one')
       return;
     }
-    playerOne = playerFactory(playerOneName.value, playerOneIcon.value)
-    playerTwo = playerFactory(playerTwoName.value, playerTwoIcon.value)
+    players.one = players.playerFactory(playerOneName.value, playerOneIcon.value, "lightcoral")
+    players.two = players.playerFactory(playerTwoName.value, playerTwoIcon.value, "#5dc5e7")
+    toggleVisibility(gameBoard.board);
     gameController.togglePlay();
     playerBlock.style.display = 'none';
   }
@@ -149,7 +166,6 @@ const displayController = (() => {
 })()
 
 window.addEventListener('click', (e) => {
-  console.log(e)
   if (e.target.classList.contains('cell') &&
     e.target.innerHTML === "") {
     gameController.makeMove(e.target.id);

@@ -1,4 +1,12 @@
+:root {
+  --button-active: hsl(175, 77%, 16%);
+  --button-hover: hsl(175, 77%, 36%);
+  --button-color: hsl(175, 77%, 26%);
+  --button-text: white;
+}
+
 html {
+  font-family: 'Courier New', Courier, monospace;
   font-size: 16px;
 }
 
@@ -7,6 +15,22 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: #eee;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 1rem 0 0 0;
+  padding: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }
 
 .container {
@@ -21,9 +45,11 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .header {
+  width: 45%;
   margin-bottom: 1rem;
 }
 
@@ -33,23 +59,65 @@ body {
   grid-template-rows: 33% 33% 33%;
   width: 100%;
   height: 100%;
+  box-shadow: 2px 2px 20px 0px rgba(5, 5, 5, 0.568);
 }
 
 .cell {
   background-color: white;
-  border: 5px solid black;
+  border: 8px solid black;
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
+  font-size: 5rem;
   font-weight: 800;
   transition: 0 2s;
 }
 
 .result {
-  display: none;
+  display: flex;
+  margin-bottom: 1rem;
+  height: 170px;
+}
+
+h3 {
+  margin-bottom: 0;
+}
+
+label {
+  padding: 0;
+  margin: 0;
+  margin-top: 0.5rem;
+}
+
+input,
+select {
+  box-sizing: border-box;
+  text-align: center;
+  width: 7rem;
+  border-radius: 5px;
+  border: 1px solid black;
+  font-size: 0.6rem;
+}
+
+button {
+  background-color: var(--button-color);
+  color: var(--button-text);
+  width: 5rem;
+  height: 2rem;
+  border: none;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  box-shadow: 0px 2px 6px 0px rgba(5, 5, 5, 0.40);
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+button:active {
+  background-color: var(--button-active);
 }
 
 .playerContainer {
@@ -66,8 +134,20 @@ body {
   margin-bottom: 10px;
 }
 
+.playerOne {
+  color: lightcoral;
+}
+
+.playerTwo {
+  color: #5dc5e7;
+}
+
 .updatePlayers {
   margin-top: 30px;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 @media (min-width:501px) and (max-width: 800px) {
